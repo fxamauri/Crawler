@@ -5,15 +5,14 @@ module.exports = function (app) {
 
   let   dados = {};
   app.get('/consulta', function (req,res) {
+    var promessas = [psn(dados),xboxLive(dados),netflix(dados)]
 
+    
 
-    netflix(dados)
-    .then(psn(dados))
-    .then(xboxLive(dados))
-    .then(function () {
-      res.json(dados);
-    });
-
+    Promise.all(promessas)
+            .then(function () {
+              res.json(dados);
+            });
 
   });
 
@@ -99,7 +98,7 @@ module.exports = function (app) {
          // .wait('#ServiosprincipaisdoXboxLive h3')
         // .evaluate(() => document.querySelector('.summaryTitleOK').innerText)
         .evaluate(function () {
-          var mensagem = document.querySelector('#ServiosprincipaisdoXboxLive h3').text;
+          var mensagem = document.querySelector('#ServiosprincipaisdoXboxLive h3').innerText;
           return mensagem;
         })
         .end()
